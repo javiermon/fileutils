@@ -55,6 +55,7 @@ def main():
         opts.directory = os.getcwd()
     elif not os.path.isdir(opts.directory):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
+        sys.exit(-1)
     file2folder(opts.directory, opts.rename, opts.simulate)
         
 
