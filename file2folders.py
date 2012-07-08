@@ -22,7 +22,7 @@ def file2folder(directory, rename=False, simulate=False):
                 os.mkdir(subdirname)
 
             if rename:
-                subdirname = "%s/%s" % (subdirname, os.path.join(name, extension))
+                subdirname = "%s/%s%s" % (subdirname, name, extension)
             logger.info("mv %s %s" % (fullfile, subdirname))
             if not simulate:
                 shutil.move(fullfile, subdirname)
