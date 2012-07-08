@@ -55,9 +55,10 @@ def main():
     opts, args = optp.parse_args()
 
     loglevel = logging.INFO if opts.verbose is False else logging.DEBUG
+    logformat = FULLFORMAT if opts.verbose else BASICFORMAT
     # log to stderr in fg
     logging.basicConfig(level=loglevel,
-                        format=FULLFORMAT if opts.verbose else BASICFORMAT)
+                        format=logformat)
 
     logger.debug("start")
     if opts.directory is None:
