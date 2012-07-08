@@ -19,6 +19,8 @@ def file2folder(directory, rename=False, simulate=False):
             name, extension = os.path.splitext(filename)
             for delimiter in delimiters:
                 name = name.replace(delimiter, ".")
+            # renaming quirks:
+            name = name.replace(":.", ":")
             # find multiple cd files and group them
             match = multicd.search(name)
             endname = name.replace(match.group(), "") if match else name
