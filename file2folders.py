@@ -1,25 +1,31 @@
 #!/usr/bin/python
 
 import sys, os, shutil
+import re
 import optparse
 import logging
 
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 logger = logging.getLogger()
-delimiters = ". _"
+delimiters = " _"
+multicd = re.compile(".cd\d", re.IGNORECASE)
 
 def file2folder(directory, rename=False, simulate=False):
-    dirname = os.path.abspath(directory)
-    for filename in os.listdir(dirname):
+    root = os.path.abspath(directory)
+    for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
-            fullfile = os.path.join(dirname, filename)
+            fullfile = os.path.join(root, filename)
             name, extension = os.path.splitext(filename)
             for delimiter in delimiters:
                 name = name.replace(delimiter, ".")
-            subdirname = os.path.join(dirname, name)
-            logger.info("mkdir %s" % subdirname)
-            if not simulate:
-                os.mkdir(subdirname)
+            # find multiple cd files and group them
+            match = multicd.search(name)
+            endname = name.replace(match.group(), "") if match else name
+            subdirname = os.path.join(root, endname)
+            if not os.path.isdir(subdirname):
+                logger.info("mkdir %s" % subdirname)
+                if not simulate:
+                    os.mkdir(subdirname)
 
             if rename:
                 subdirname = "%s/%s%s" % (subdirname, name, extension)
