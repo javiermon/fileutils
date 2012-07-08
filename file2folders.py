@@ -3,7 +3,7 @@
 import sys, os, shutil
 import optparse
 import logging
-h
+
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 logger = logging.getLogger()
 delimiters = ". _"
