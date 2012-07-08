@@ -6,6 +6,7 @@ import optparse
 import logging
 
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
+BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
 delimiters = " _"
 multicd = re.compile(".cd\d", re.IGNORECASE)
@@ -54,16 +55,16 @@ def main():
     loglevel = logging.INFO if opts.verbose is False else logging.DEBUG
     # log to stderr in fg
     logging.basicConfig(level=loglevel,
-                        format=FULLFORMAT)
+                        format=FULLFORMAT if opts.verbose else BASICFORMAT)
 
-    logger.debug("init")
+    logger.debug("start")
     if opts.directory is None:
         opts.directory = os.getcwd()
     elif not os.path.isdir(opts.directory):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
     file2folder(opts.directory, opts.rename, opts.simulate)
-        
+    logger.debug("end")    
 
 if __name__ == "__main__":    
     main()
