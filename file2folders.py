@@ -9,8 +9,9 @@ logger = logging.getLogger()
 delimiters = ". _"
 
 def file2folder(directory, rename=False, simulate=False):
-    for dirname, _, filenames in os.walk(directory):
-        for filename in filenames:
+    dirname = os.path.abspath(directory)
+    for filename in os.listdir(dirname):
+        if os.path.isfile(os.path.join(directory, filename)):
             fullfile = os.path.join(dirname, filename)
             name, extension = os.path.splitext(filename)
             for delimiter in delimiters:
@@ -52,6 +53,8 @@ def main():
     logger.debug("init")
     if opts.directory is None:
         opts.directory = os.getcwd()
+    elif not os.path.isdir(opts.directory):
+        print >> sys.stderr, "%s is not a valid directory" % opts.directory
     file2folder(opts.directory, opts.rename, opts.simulate)
         
 
