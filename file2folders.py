@@ -62,7 +62,9 @@ def main():
 
     logger.debug("start")
     if opts.directory is None:
-        opts.directory = os.getcwd()
+        print >> sys.stderr, "please specify a valid directory"
+        optp.print_help()
+        sys.exit(-1)
     elif not os.path.isdir(opts.directory):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
