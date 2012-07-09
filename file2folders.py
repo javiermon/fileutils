@@ -60,7 +60,6 @@ def main():
     logging.basicConfig(level=loglevel,
                         format=logformat)
 
-    logger.debug("start")
     if opts.directory is None:
         print >> sys.stderr, "please specify a valid directory"
         optp.print_help()
@@ -69,7 +68,6 @@ def main():
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
     file2folder(opts.directory, opts.rename, opts.simulate)
-    logger.debug("end")    
 
 if __name__ == "__main__":    
     main()
