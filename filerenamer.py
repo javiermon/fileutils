@@ -36,8 +36,8 @@ def filerename(directory, new, original="Episode", simulate=False):
             name = name.replace(":.", ":")
             name = name.replace(".-.", "-")     
             name = name.replace("%s." % original, '%s.S%sE0' % (new, season))
-            # renaming quirks:
-            name = name.replace("00", "0")
+            # renaming quirks: remove 0 for double digits episodes
+            name = re.sub(r'(E)0(\d{2})', r'\1\2', name)
             
             newfile = "%s/%s%s" % (directory, name, extension)
             logger.info("mv %s %s" % (fullfile, newfile))
