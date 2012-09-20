@@ -26,9 +26,10 @@ def filerename(directory, new, original="Episode", simulate=False):
             name, extension = os.path.splitext(filename)
 
             # extract season from directory:
-            season = 1
+            season = "01"
             try:
-                season = seasonre.match(basedir).group(1)
+                season = "%02d" % int(seasonre.match(basedir).group(1))
+
             except IndexError, AttributeError:
                 print >> sys.stderr, "could not determine season, assuming it's the first"
 
@@ -37,14 +38,14 @@ def filerename(directory, new, original="Episode", simulate=False):
             # renaming quirks:
             name = name.replace(":.", ":")
             name = name.replace(".-.", "-")     
-            prefix = '%s.S%sE0' % (new, season)
-            name = name.replace("%s." % original, prefix)
+            prefix = '%s.S%sE' % (new, season)
+            name = name.replace("%s." % original, "%s0" % prefix)
             # renaming quirks: remove 0 for double digits episodes
-            name = re.sub(r'(%sE)0(\d{2})' % prefix, r'\1\2', name)
-            # renaming quirks: join double episodes again
-            name = re.sub(r'(%sE\d{2}).(\d{1,2})' % prefix, r'\1-\2', name)
-            # renaming quirks: add 0 if trailing episode is < 10
-            name = re.sub(r'(%sE\d{2}-)(\d{1})' % prefix, r'\10\2', name)
+            name = re.sub(r'(%s)0(\d{2})' % prefix, r'\1\2', name)
+            # renaming quirks: join double episodes again, put 0
+            name = re.sub(r'(%s\d{2}).(\d{1,2})' % prefix, r'\1-0\2', name)
+            # renaming quirks: remove 0 if trailing episode is > 10
+            name = re.sub(r'(%s\d{2}-)0(\d{2})' % prefix, r'\1\2', name)
 
             newfile = "%s/%s%s" % (directory, name, extension)
             logger.info("mv %s %s" % (fullfile, newfile))
