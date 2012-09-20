@@ -36,21 +36,15 @@ def filerename(directory, new, original="Episode", simulate=False):
                 name = name.replace(delimiter, ".")
             # renaming quirks:
             name = name.replace(":.", ":")
-            logger.debug(name)
             name = name.replace(".-.", "-")     
-            logger.debug(name)
             prefix = '%s.S%sE0' % (new, season)
             name = name.replace("%s." % original, prefix)
-            logger.debug(name)
             # renaming quirks: remove 0 for double digits episodes
             name = re.sub(r'(%sE)0(\d{2})' % prefix, r'\1\2', name)
-            logger.debug(name)
             # renaming quirks: join double episodes again
             name = re.sub(r'(%sE\d{2}).(\d{1,2})' % prefix, r'\1-\2', name)
-            logger.debug(name)
             # renaming quirks: add 0 if trailing episode is < 10
             name = re.sub(r'(%sE\d{2}-)(\d{1})' % prefix, r'\10\2', name)
-            logger.debug(name)
 
             newfile = "%s/%s%s" % (directory, name, extension)
             logger.info("mv %s %s" % (fullfile, newfile))
