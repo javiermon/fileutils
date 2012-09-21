@@ -9,7 +9,7 @@ FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
 delimiters = " _"
-seasonre = re.compile("season (\d)", re.IGNORECASE)
+seasonre = re.compile("season\s*(\d)", re.IGNORECASE)
 
 def filerename(directory, new, original="Episode", simulate=False):
     root = os.path.abspath(directory)
