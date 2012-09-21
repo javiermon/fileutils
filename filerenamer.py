@@ -12,10 +12,8 @@ delimiters = " _"
 seasonre = re.compile("season (\d)", re.IGNORECASE)
 
 def filerename(directory, new, original="Episode", simulate=False):
-    logger.info("Parsing root: %s" % new)
-
     root = os.path.abspath(directory)
-    logger.debug("walking %s" % root)
+    logger.debug("walking %s, renaming to %s" % (root, new))
     
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
