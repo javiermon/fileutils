@@ -27,7 +27,7 @@ def filerename(directory, new, original="Episode", simulate=False):
             try:
                 season = "%02d" % int(seasonre.match(basedir).group(1))
             except (IndexError, AttributeError):
-                print >> sys.stderr, "could not determine season, assuming it's the first"
+                logger.debug("could not determine season, assuming it's the first")
 
             for delimiter in delimiters:
                 name = name.replace(delimiter, ".")
