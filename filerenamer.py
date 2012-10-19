@@ -10,13 +10,19 @@ BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
 delimiters = " _"
 seasonre = re.compile("season\s*(\d)", re.IGNORECASE)
+prefixre = re.compile("(\w+)[%s]." % delimiters)
 
-def filerename(directory, new, original="Episode", simulate=False):
+def filerename(directory, new, original=None, simulate=False):
     root = os.path.abspath(directory)
     logger.debug("walking %s, renaming to %s" % (root, new))
     
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
+            try:
+                original = prefixre.match(filename).group(1) if original is None else original
+            except AttributeError:
+                original = "Episode"
+
             fullfile = os.path.join(root, filename)
             basedir = os.path.basename(directory)
             logger.debug("parsing %s from %s" % (fullfile, basedir))
@@ -67,7 +73,7 @@ def main():
     optp.add_option("-n", "--new", dest="new",
                     help="new naming.")
 
-    opts, args = optp.parse_args()
+    opts, _ = optp.parse_args()
 
     loglevel = logging.DEBUG if opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
@@ -80,16 +86,14 @@ def main():
         optp.print_help()
         sys.exit(-1)
 
-    elif opts.origin is None:
-        print >> sys.stderr, "please specify an origin naming scheme"
-        optp.print_help()
-        sys.exit(-1)
+    if opts.origin is None:
+        print >> sys.stderr, "Will try to guess origin name"
 
-    elif opts.new is None:
+    if opts.new is None:
         opts.new = os.path.basename(os.path.abspath(opts.directory))
         print >> sys.stderr, "Assuming new name %s" % opts.new
 
-    elif not os.path.isdir(opts.directory):
+    if not os.path.isdir(opts.directory):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
 
