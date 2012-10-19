@@ -52,7 +52,7 @@ def main():
     optp.add_option("-r", "--rename", dest="rename",
                     help="rename the file changing delimiters.", action="store_true", default=False)
 
-    opts, args = optp.parse_args()
+    opts, _ = optp.parse_args()
 
     loglevel = logging.DEBUG if opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
