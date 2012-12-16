@@ -28,7 +28,7 @@ def filetagger(directory):
 def main():
     # Setup the command line arguments.                                                                                                                                   
     optp = optparse.OptionParser()
-    # options.                                                                                                                                                            
+    # options.
 
     optp.add_option("-d", "--directory", dest="directory",
                     help="directory to parse.")
@@ -38,6 +38,14 @@ def main():
 
     optp.add_option("-s", "--simulate", dest="simulate",
                     help="do nothing, just simulate.", action="store_true", default=False)
+
+    opts, _ = optp.parse_args()
+    
+    loglevel = logging.DEBUG if opts.verbose else logging.INFO
+    logformat = FULLFORMAT if opts.verbose else BASICFORMAT
+    # log to stderr in fg
+    logging.basicConfig(level=loglevel,
+                        format=logformat)
 
     if opts.directory is None:
         print >> sys.stderr, "please specify a valid directory"
