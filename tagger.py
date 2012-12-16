@@ -8,14 +8,11 @@ import logging
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
-delimiters = " _"
-seasonre = re.compile("season\s*(\d)", re.IGNORECASE)
-prefixre = re.compile("(\w+)[%s]." % delimiters)
 
-def filerename(directory):
+def filetagger(directory):
     root = os.path.abspath(directory)
 
-    for filename in os.listdir(root):
+    for filetagger in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
             name, extension = os.path.splitext(filename)
             print name, extension
@@ -54,7 +51,7 @@ def main():
         sys.exit(-1)
 
     for root, _, _ in os.walk(opts.directory):
-        filerename(root)
+        filetagger(root)
 
 if __name__ == "__main__":
     main()
