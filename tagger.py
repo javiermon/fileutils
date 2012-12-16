@@ -17,8 +17,9 @@ def filetagger(directory):
             if extension in (".mp3"):
                 song = name[3:]
                 number = name[:2]
-                artist = os.getcwd().split('/')[-2]
-                album = os.getcwd().split('/')[-1]
+                path = os.getcwd().split('/')
+                artist = path[-2]
+                album = path[-1]
                 cmd = "id3v2 -a %s -A %s -t '%s' -T %s '%s'" % (artist, album, song, number, filename)
                 logger.info(cmd)
                 if not simulate:
