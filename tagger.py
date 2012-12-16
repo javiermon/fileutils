@@ -5,8 +5,8 @@ import optparse
 
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
-logger = logging.getLogger()
 extensions = (".mp3", ".ogg")
+logger = logging.getLogger()
 
 def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
