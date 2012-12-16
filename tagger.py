@@ -48,11 +48,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    opts, _ = optp.parse_args()
-
-    loglevel = logging.DEBUG if opts.verbose else logging.INFO
-    logformat = FULLFORMAT if opts.verbose else BASICFORMAT
-    # log to stderr in fg                                                                                                                                                 
-    logging.basicConfig(level=loglevel,
-                        format=logformat)
