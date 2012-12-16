@@ -13,8 +13,8 @@ def filetagger(directory, simulate=False):
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
             name, extension = os.path.splitext(filename)
-            logger.debug("tagging %s%s" % name, extension)
             if extension in extensions:
+                logger.debug("tagging %s%s" % name, extension)
                 song = name[3:]
                 number = name[:2]
                 path = os.getcwd().split('/')
