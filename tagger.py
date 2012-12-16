@@ -7,6 +7,7 @@ import logging
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
+extensions = (".mp3", ".ogg")
 
 def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
@@ -14,7 +15,7 @@ def filetagger(directory, simulate=False):
         if os.path.isfile(os.path.join(directory, filename)):
             name, extension = os.path.splitext(filename)
             logger.debug("tagging %s%s" % name, extension)
-            if extension in (".mp3"):
+            if extension in extensions:
                 song = name[3:]
                 number = name[:2]
                 path = os.getcwd().split('/')
