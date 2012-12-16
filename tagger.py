@@ -13,7 +13,7 @@ def filetagger(directory):
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
             name, extension = os.path.splitext(filename)
-            print name, extension
+            logger.debug("tagging %s%s" % name, extension)
             if extension in (".mp3"):
                 song = name[3:]
                 number = name[:2]
@@ -21,7 +21,7 @@ def filetagger(directory):
                 artist = path[-2]
                 album = path[-1]
                 cmd = "id3v2 -a %s -A %s -t '%s' -T %s '%s'" % (artist, album, song, number, filename)
-                logger.info(cmd)
+                logger.debug(cmd)
                 if not simulate:
                     os.system(cmd)
 
