@@ -20,8 +20,9 @@ def filetagger(directory):
                 artist = os.getcwd().split('/')[-2]
                 album = os.getcwd().split('/')[-1]
                 cmd = "id3v2 -a %s -A %s -t '%s' -T %s '%s'" % (artist, album, song, number, filename)
-                print cmd
-                os.system(cmd)
+                logger.info(cmd)
+                if not simulate:
+                    os.system(cmd)
 
 def main():
     # Setup the command line arguments.                                                                                                                                   
@@ -33,6 +34,9 @@ def main():
 
     optp.add_option("-v", "--verbose", dest="verbose",
                     help="log verbosity.", action="store_true", default=False)
+
+    optp.add_option("-s", "--simulate", dest="simulate",
+                    help="do nothing, just simulate.", action="store_true", default=False)
 
     if opts.directory is None:
         print >> sys.stderr, "please specify a valid directory"
