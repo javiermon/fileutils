@@ -8,7 +8,7 @@ FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
 
-def filetagger(directory):
+def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
@@ -57,7 +57,7 @@ def main():
         sys.exit(-1)
 
     for root, _, _ in os.walk(opts.directory):
-        filetagger(root)
+        filetagger(root, opts.simulate)
 
 if __name__ == "__main__":
     main()
