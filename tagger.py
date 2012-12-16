@@ -2,7 +2,6 @@
 import sys, os
 import logging
 import optparse
-import logging
 
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
