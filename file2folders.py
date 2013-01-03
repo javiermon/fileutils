@@ -11,7 +11,7 @@ logger = logging.getLogger()
 delimiters = " _"
 multicd = re.compile(".cd\d", re.IGNORECASE)
 
-def file2folder(directory, rename=False, simulate=False):
+def file2folder(directory, simulate=False):
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
@@ -30,8 +30,8 @@ def file2folder(directory, rename=False, simulate=False):
                 if not simulate:
                     os.mkdir(subdirname)
 
-            if rename:
-                subdirname = "%s/%s%s" % (subdirname, name, extension)
+            # rename the file:
+            subdirname = "%s/%s%s" % (subdirname, name, extension)
             logger.debug("mv %s %s" % (fullfile, subdirname))
             if not simulate:
                 shutil.move(fullfile, subdirname)
@@ -49,9 +49,6 @@ def main():
     optp.add_option("-s", "--simulate", dest="simulate",
                     help="do nothing, just simulate.", action="store_true", default=False)
 
-    optp.add_option("-r", "--rename", dest="rename",
-                    help="rename the file changing delimiters.", action="store_true", default=False)
-
     opts, _ = optp.parse_args()
 
     loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
@@ -67,7 +64,7 @@ def main():
     elif not os.path.isdir(opts.directory):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
-    file2folder(opts.directory, opts.rename, opts.simulate)
+    file2folder(opts.directory, opts.simulate)
 
 if __name__ == "__main__":
     main()
