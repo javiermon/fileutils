@@ -26,13 +26,13 @@ def file2folder(directory, rename=False, simulate=False):
             endname = name.replace(match.group(), "") if match else name
             subdirname = os.path.join(root, endname)
             if not os.path.isdir(subdirname):
-                logger.info("mkdir %s" % subdirname)
+                logger.debug("mkdir %s" % subdirname)
                 if not simulate:
                     os.mkdir(subdirname)
 
             if rename:
                 subdirname = "%s/%s%s" % (subdirname, name, extension)
-            logger.info("mv %s %s" % (fullfile, subdirname))
+            logger.debug("mv %s %s" % (fullfile, subdirname))
             if not simulate:
                 shutil.move(fullfile, subdirname)
 
@@ -54,7 +54,7 @@ def main():
 
     opts, _ = optp.parse_args()
 
-    loglevel = logging.DEBUG if opts.verbose else logging.INFO
+    loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
     # log to stderr in fg
     logging.basicConfig(level=loglevel,
@@ -69,5 +69,5 @@ def main():
         sys.exit(-1)
     file2folder(opts.directory, opts.rename, opts.simulate)
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     main()

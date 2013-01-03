@@ -15,7 +15,7 @@ prefixre = re.compile("(\w+)[%s]." % delimiters)
 def filerename(directory, new, original=None, simulate=False):
     root = os.path.abspath(directory)
     logger.debug("walking %s, renaming to %s" % (root, new))
-    
+
     for filename in os.listdir(root):
         if os.path.isfile(os.path.join(directory, filename)):
             try:
@@ -39,7 +39,7 @@ def filerename(directory, new, original=None, simulate=False):
                 name = name.replace(delimiter, ".")
             # renaming quirks:
             name = name.replace(":.", ":")
-            name = name.replace(".-.", "-")     
+            name = name.replace(".-.", "-")
             prefix = '%s.S%sE' % (new, season)
             name = name.replace("%s." % original, "%s0" % prefix)
             # renaming quirks: remove 0 for double digits episodes
@@ -50,7 +50,7 @@ def filerename(directory, new, original=None, simulate=False):
             name = re.sub(r'(%s\d{2}-)0(\d{2})' % prefix, r'\1\2', name)
 
             newfile = "%s/%s%s" % (directory, name, extension)
-            logger.info("mv %s %s" % (fullfile, newfile))
+            logger.debug("mv %s %s" % (fullfile, newfile))
             if not simulate:
                 shutil.move(fullfile, newfile)
 
@@ -75,7 +75,7 @@ def main():
 
     opts, _ = optp.parse_args()
 
-    loglevel = logging.DEBUG if opts.verbose else logging.INFO
+    loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
     # log to stderr in fg
     logging.basicConfig(level=loglevel,
@@ -100,5 +100,5 @@ def main():
     for root, _, _ in os.walk(opts.directory):
         filerename(root, opts.new, opts.origin, opts.simulate)
 
-if __name__ == "__main__":    
+if __name__ == "__main__":
     main()

@@ -41,7 +41,7 @@ def main():
 
     opts, _ = optp.parse_args()
 
-    loglevel = logging.DEBUG if opts.verbose else logging.INFO
+    loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
     # log to stderr in fg
     logging.basicConfig(level=loglevel,
