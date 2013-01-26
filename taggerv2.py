@@ -15,19 +15,21 @@ def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
         fullfile = os.path.join(directory, filename)
-        if os.path.isfile(fullfile):
-            name, extension = os.path.splitext(filename)
-            if extension in extensions:
-                logger.debug("v2 tagging %s%s" % (name, extension))
-                cmd = "id3v2 -l  %s | grep 'No ID3v2 tag'" % shellquote(fullfile)
+        if not os.path.isfile(fullfile):
+            continue
+        name, extension = os.path.splitext(filename)
+        if not extension in extensions:
+            continue
+        logger.debug("v2 tagging %s%s" % (name, extension))
+        cmd = "id3v2 -l  %s | grep 'No ID3v2 tag'" % shellquote(fullfile)
+        logger.debug(cmd)
+        if not simulate:
+            ret = os.system(cmd)
+            if ret == 0:
+                cmd = "id3v2 -C  %s" % shellquote(fullfile)
                 logger.debug(cmd)
                 if not simulate:
-                    ret = os.system(cmd)
-                    if ret == 0:
-                        cmd = "id3v2 -C  %s" % shellquote(fullfile)
-                        logger.debug(cmd)
-                        if not simulate:
-                            os.system(cmd)
+                    os.system(cmd)
 
 def main():
     # Setup the command line arguments.
