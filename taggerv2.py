@@ -8,19 +8,23 @@ BASICFORMAT = "%(message)s"
 extensions = (".mp3", ".ogg")
 logger = logging.getLogger()
 
+def shellquote(s):
+    return "'" + s.replace("'", "'\\''") + "'"
+
 def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
-        if os.path.isfile(os.path.join(directory, filename)):
+        fullfile = os.path.join(directory, filename)
+        if os.path.isfile(fullfile):
             name, extension = os.path.splitext(filename)
             if extension in extensions:
                 logger.debug("v2 tagging %s%s" % (name, extension))
-                cmd = "id3v2 -l  '%s' | grep 'No ID3v2 tag'" % (filename)
+                cmd = "id3v2 -l  %s | grep 'No ID3v2 tag'" % shellquote(fullfile)
                 logger.debug(cmd)
                 if not simulate:
                     ret = os.system(cmd)
                     if ret == 0:
-                        cmd = "id3v2 -C  '%s'" % (filename)
+                        cmd = "id3v2 -C  %s" % shellquote(fullfile)
                         logger.debug(cmd)
                         if not simulate:
                             os.system(cmd)
