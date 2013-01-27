@@ -3,6 +3,7 @@ import sys
 import os
 import logging
 import optparse
+import subprocess
 
 FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
@@ -25,18 +26,20 @@ def filetagger(directory, simulate=False, count=False):
         if not extension in extensions:
             continue
         logger.debug("v2 tagging %s%s" % (name, extension))
-        cmd = "id3v2 -l  %s | grep 'No ID3v2 tag'" % shellquote(fullfile)
+        cmd = ['id3v2', '-l', fullfile]
         logger.debug(cmd)
         if simulate:
             continue
-        ret = os.system(cmd)
-        if ret == 0:
-            found += 1
-            if count:
-                continue
-            cmd = "id3v2 -C  %s" % shellquote(fullfile)
-            logger.debug(cmd)
-            os.system(cmd)
+        output = subprocess.Popen(cmd, \
+            stdout=subprocess.PIPE).communicate()[0]
+        if output.find('No ID3v2 tag') == -1:
+            continue
+        found += 1
+        if count:
+            continue
+        cmd = ['id3v2', '-C', fullfile]
+        logger.debug(cmd)
+        subprocess.call(cmd)
     return found
 
 
