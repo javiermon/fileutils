@@ -17,42 +17,43 @@ def filerename(directory, new, original=None, simulate=False):
     logger.debug("walking %s, renaming to %s" % (root, new))
 
     for filename in os.listdir(root):
-        if os.path.isfile(os.path.join(directory, filename)):
-            try:
-                original = prefixre.match(filename).group(1) if original is None else original
-            except AttributeError:
-                original = "Episode"
+        if not os.path.isfile(os.path.join(directory, filename)):
+            continue
+        try:
+            original = prefixre.match(filename).group(1) if original is None else original
+        except AttributeError:
+            original = "Episode"
 
-            fullfile = os.path.join(root, filename)
-            basedir = os.path.basename(directory)
-            logger.debug("parsing %s from %s" % (fullfile, basedir))
+        fullfile = os.path.join(root, filename)
+        basedir = os.path.basename(directory)
+        logger.debug("parsing %s from %s" % (fullfile, basedir))
 
-            name, extension = os.path.splitext(filename)
-            # extract season from directory:
-            season = "01"
-            try:
-                season = "%02d" % int(seasonre.match(basedir).group(1))
-            except (IndexError, AttributeError):
-                logger.debug("could not determine season, assuming it's the first")
+        name, extension = os.path.splitext(filename)
+        # extract season from directory:
+        season = "01"
+        try:
+            season = "%02d" % int(seasonre.match(basedir).group(1))
+        except (IndexError, AttributeError):
+            logger.debug("could not determine season, assuming it's the first")
 
-            for delimiter in delimiters:
-                name = name.replace(delimiter, ".")
-            # renaming quirks:
-            name = name.replace(":.", ":")
-            name = name.replace(".-.", "-")
-            prefix = '%s.S%sE' % (new, season)
-            name = name.replace("%s." % original, "%s0" % prefix)
-            # renaming quirks: remove 0 for double digits episodes
-            name = re.sub(r'(%s)0(\d{2})' % prefix, r'\1\2', name)
-            # renaming quirks: join double episodes again, put 0
-            name = re.sub(r'(%s\d{2}).(\d{1,2})' % prefix, r'\1-0\2', name)
-            # renaming quirks: remove 0 if trailing episode is > 10
-            name = re.sub(r'(%s\d{2}-)0(\d{2})' % prefix, r'\1\2', name)
+        for delimiter in delimiters:
+            name = name.replace(delimiter, ".")
+        # renaming quirks:
+        name = name.replace(":.", ":")
+        name = name.replace(".-.", "-")
+        prefix = '%s.S%sE' % (new, season)
+        name = name.replace("%s." % original, "%s0" % prefix)
+        # renaming quirks: remove 0 for double digits episodes
+        name = re.sub(r'(%s)0(\d{2})' % prefix, r'\1\2', name)
+        # renaming quirks: join double episodes again, put 0
+        name = re.sub(r'(%s\d{2}).(\d{1,2})' % prefix, r'\1-0\2', name)
+        # renaming quirks: remove 0 if trailing episode is > 10
+        name = re.sub(r'(%s\d{2}-)0(\d{2})' % prefix, r'\1\2', name)
 
-            newfile = "%s/%s%s" % (directory, name, extension)
-            logger.debug("mv %s %s" % (fullfile, newfile))
-            if not simulate:
-                shutil.move(fullfile, newfile)
+        newfile = "%s/%s%s" % (directory, name, extension)
+        logger.debug("mv %s %s" % (fullfile, newfile))
+        if not simulate:
+            shutil.move(fullfile, newfile)
 
 def main():
     # Setup the command line arguments.

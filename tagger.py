@@ -11,19 +11,21 @@ logger = logging.getLogger()
 def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
-        if os.path.isfile(os.path.join(directory, filename)):
-            name, extension = os.path.splitext(filename)
-            if extension in extensions:
-                logger.debug("tagging %s%s" % (name, extension))
-                song = name[3:]
-                number = name[:2]
-                path = os.getcwd().split('/')
-                artist = path[-2]
-                album = path[-1]
-                cmd = "id3v2 -a '%s' -A '%s' -t '%s' -T '%s' '%s'" % (artist, album, song, number, filename)
-                logger.debug(cmd)
-                if not simulate:
-                    os.system(cmd)
+        if not os.path.isfile(os.path.join(directory, filename)):
+            continue
+        name, extension = os.path.splitext(filename)
+        if not extension in extensions:
+            continue
+        logger.debug("tagging %s%s" % (name, extension))
+        song = name[3:]
+        number = name[:2]
+        path = os.getcwd().split('/')
+        artist = path[-2]
+        album = path[-1]
+        cmd = "id3v2 -a '%s' -A '%s' -t '%s' -T '%s' '%s'" % (artist, album, song, number, filename)
+        logger.debug(cmd)
+        if not simulate:
+            os.system(cmd)
 
 def main():
     # Setup the command line arguments.
