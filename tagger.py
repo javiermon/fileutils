@@ -29,17 +29,13 @@ def main():
     # Setup the command line arguments.
     optp = optparse.OptionParser()
     # options.
-
-    optp.add_option("-d", "--directory", dest="directory",
-                    help="directory to parse.")
-
     optp.add_option("-v", "--verbose", dest="verbose",
                     help="log verbosity.", action="store_true", default=False)
 
     optp.add_option("-s", "--simulate", dest="simulate",
                     help="do nothing, just simulate.", action="store_true", default=False)
 
-    opts, _ = optp.parse_args()
+    opts, args = optp.parse_args()
 
     loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
@@ -47,16 +43,16 @@ def main():
     logging.basicConfig(level=loglevel,
                         format=logformat)
 
-    if opts.directory is None:
+    if len(args) < 1:
         print >> sys.stderr, "please specify a valid directory"
         optp.print_help()
         sys.exit(-1)
 
-    if not os.path.isdir(opts.directory):
+    if not os.path.isdir(args[0]):
         print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
 
-    for root, _, _ in os.walk(opts.directory):
+    for root, _, _ in os.walk(args[0]):
         filetagger(root, opts.simulate)
 
 if __name__ == "__main__":

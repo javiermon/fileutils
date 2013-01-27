@@ -58,9 +58,6 @@ def main():
     # Setup the command line arguments.
     optp = optparse.OptionParser()
     # options.
-    optp.add_option("-d", "--directory", dest="directory",
-                    help="directory to parse.")
-
     optp.add_option("-v", "--verbose", dest="verbose",
                     help="log verbosity.", action="store_true", default=False)
 
@@ -73,7 +70,7 @@ def main():
     optp.add_option("-n", "--new", dest="new",
                     help="new naming.")
 
-    opts, _ = optp.parse_args()
+    opts, args = optp.parse_args()
 
     loglevel = logging.DEBUG if opts.simulate or opts.verbose else logging.INFO
     logformat = FULLFORMAT if opts.verbose else BASICFORMAT
@@ -81,9 +78,13 @@ def main():
     logging.basicConfig(level=loglevel,
                         format=logformat)
 
-    if opts.directory is None:
+    if len(args) < 1:
         print >> sys.stderr, "please specify a valid directory"
         optp.print_help()
+        sys.exit(-1)
+
+    if not os.path.isdir(args[0]):
+        print >> sys.stderr, "%s is not a valid directory" % opts.directory
         sys.exit(-1)
 
     if opts.origin is None:
@@ -93,11 +94,7 @@ def main():
         opts.new = os.path.basename(os.path.abspath(opts.directory))
         print >> sys.stderr, "Assuming new name %s" % opts.new
 
-    if not os.path.isdir(opts.directory):
-        print >> sys.stderr, "%s is not a valid directory" % opts.directory
-        sys.exit(-1)
-
-    for root, _, _ in os.walk(opts.directory):
+    for root, _, _ in os.walk(args[0]):
         filerename(root, opts.new, opts.origin, opts.simulate)
 
 if __name__ == "__main__":
