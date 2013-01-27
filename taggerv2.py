@@ -14,7 +14,8 @@ def shellquote(s):
     return "'" + s.replace("'", "'\\''") + "'"
 
 
-def filetagger(directory, simulate=False):
+def filetagger(directory, simulate=False, count=False):
+    found = 0
     root = os.path.abspath(directory)
     for filename in os.listdir(root):
         fullfile = os.path.join(directory, filename)
@@ -26,13 +27,17 @@ def filetagger(directory, simulate=False):
         logger.debug("v2 tagging %s%s" % (name, extension))
         cmd = "id3v2 -l  %s | grep 'No ID3v2 tag'" % shellquote(fullfile)
         logger.debug(cmd)
-        if not simulate:
-            ret = os.system(cmd)
-            if ret == 0:
-                cmd = "id3v2 -C  %s" % shellquote(fullfile)
-                logger.debug(cmd)
-                if not simulate:
-                    os.system(cmd)
+        if simulate:
+            continue
+        ret = os.system(cmd)
+        if ret == 0:
+            found += 1
+            if count:
+                continue
+            cmd = "id3v2 -C  %s" % shellquote(fullfile)
+            logger.debug(cmd)
+            os.system(cmd)
+    return found
 
 
 def main():
@@ -47,6 +52,11 @@ def main():
     optp.add_option("-s", "--simulate", dest="simulate",
                     help="do nothing, just simulate.", action="store_true",
                     default=False)
+
+    optp.add_option("-c", "--count", dest="count",
+                    help="count the files without idv2 tags but" + \
+                    " do not change them",
+                    action="store_true", default=False)
 
     opts, args = optp.parse_args()
 
@@ -65,8 +75,11 @@ def main():
         print >> sys.stderr, "ERROR: %s is not a valid directory" % args[0]
         sys.exit(-1)
 
+    total = 0
     for root, _, _ in os.walk(args[0]):
-        filetagger(root, opts.simulate)
+        total += filetagger(root, opts.simulate, opts.count)
+    if opts.count:
+        print str(total) + ' files found without idv2 tags'
 
 if __name__ == "__main__":
     main()
