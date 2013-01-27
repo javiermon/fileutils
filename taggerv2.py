@@ -1,5 +1,6 @@
 #!/usr/bin/python
-import sys, os
+import sys
+import os
 import logging
 import optparse
 
@@ -8,8 +9,10 @@ BASICFORMAT = "%(message)s"
 extensions = (".mp3", ".ogg")
 logger = logging.getLogger()
 
+
 def shellquote(s):
     return "'" + s.replace("'", "'\\''") + "'"
+
 
 def filetagger(directory, simulate=False):
     root = os.path.abspath(directory)
@@ -31,6 +34,7 @@ def filetagger(directory, simulate=False):
                 if not simulate:
                     os.system(cmd)
 
+
 def main():
     # Setup the command line arguments.
     optp = optparse.OptionParser()
@@ -43,7 +47,8 @@ def main():
                     help="log verbosity.", action="store_true", default=False)
 
     optp.add_option("-s", "--simulate", dest="simulate",
-                    help="do nothing, just simulate.", action="store_true", default=False)
+                    help="do nothing, just simulate.", action="store_true",
+                    default=False)
 
     opts, _ = optp.parse_args()
 
