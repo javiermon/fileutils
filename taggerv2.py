@@ -10,11 +10,6 @@ BASICFORMAT = "%(message)s"
 extensions = (".mp3", ".ogg")
 logger = logging.getLogger()
 
-
-def shellquote(s):
-    return "'" + s.replace("'", "'\\''") + "'"
-
-
 def filetagger(directory, simulate=False, count=False):
     found = 0
     root = os.path.abspath(directory)
