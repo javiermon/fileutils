@@ -9,7 +9,7 @@ FULLFORMAT = "%(asctime)s  [%(levelname)s]  [%(module)s] %(message)s"
 BASICFORMAT = "%(message)s"
 logger = logging.getLogger()
 delimiters = " _"
-multicd = re.compile(".cd\d", re.IGNORECASE)
+multicd = re.compile(r".cd\d", re.IGNORECASE)
 
 def file2folder(directory, simulate=False):
     root = os.path.abspath(directory)
