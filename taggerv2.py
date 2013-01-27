@@ -30,7 +30,7 @@ def filetagger(directory, simulate=False, count=False):
         logger.debug(cmd)
         if simulate:
             continue
-        output = subprocess.Popen(cmd, \
+        output = subprocess.Popen(cmd,
             stdout=subprocess.PIPE).communicate()[0]
         if output.find('No ID3v2 tag') == -1:
             continue
