@@ -61,7 +61,7 @@ def main():
         optp.print_help()
         sys.exit(-1)
     elif not os.path.isdir(args[0]):
-        print >> sys.stderr, "%s is not a valid directory" % opts.directory
+        print >> sys.stderr, "%s is not a valid directory" % args[0]
         sys.exit(-1)
     file2folder(args[0], opts.simulate)
 
