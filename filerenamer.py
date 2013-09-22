@@ -85,14 +85,14 @@ def main():
         sys.exit(-1)
 
     if not os.path.isdir(args[0]):
-        print >> sys.stderr, "%s is not a valid directory" % opts.directory
+        print >> sys.stderr, "%s is not a valid directory" % args[0]
         sys.exit(-1)
 
     if opts.origin is None:
         print >> sys.stderr, "Will try to guess origin name"
 
     if opts.new is None:
-        opts.new = os.path.basename(os.path.abspath(opts.directory))
+        opts.new = os.path.basename(os.path.abspath(args[0]))
         print >> sys.stderr, "Assuming new name %s" % opts.new
 
     for root, _, _ in os.walk(args[0]):
